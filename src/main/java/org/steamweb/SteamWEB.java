@@ -63,7 +63,7 @@ public class SteamWEB implements ISteamWEB {
         this.session.generateSessionId();
 
         //Params for the post request
-        List<NameValuePair> jsonParams = new ArrayList<NameValuePair>(2);
+        List<NameValuePair> jsonParams = new ArrayList<>(2);
         jsonParams.add(new BasicNameValuePair("nonce", token));
         jsonParams.add(new BasicNameValuePair("sessionid", this.session.getSessionid()));
         jsonParams.add(new BasicNameValuePair("redir", "https://store.steampowered.com/login/?redir=&dir_ssl=1&snr=1_4_4__global-header"));
