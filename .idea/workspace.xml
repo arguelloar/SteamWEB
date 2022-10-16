@@ -5,8 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1be906bb-b4dc-4499-a043-5a5ca03a11c1" name="Changes" comment="First Version">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/steamweb/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/steamweb/models/SetPrivacy.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/steamweb/services/CardsInventoryService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/steamweb/services/FarmableGamesService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/steamweb/services/LoginService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/steamweb/services/SessionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/steamweb/ISteamWEB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/steamweb/models/ISteamWEB.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/steamweb/SteamWEB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/steamweb/SteamWEB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/steamweb/types/FarmableGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/steamweb/models/FarmableGame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/steamweb/types/Item.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/steamweb/models/Item.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/steamweb/types/Session.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/steamweb/models/Session.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/steamweb/SteamWEBTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/steamweb/SteamWEBTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,9 +28,11 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Interface" />
         <option value="JUnit5 Test Class" />
+        <option value="HTML File" />
+        <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -29,38 +43,58 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2FbLbcWt9kqfrjOBTcL58qc4Kog" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="false" id="Update" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Gonna/IdeaProjects/SteamWEB&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Gonna\IdeaProjects\SteamWEB\src\main\java\org\steamweb" />
     </key>
     <key name="CreateTestDialog.RecentsKey">
       <recent name="org.steamweb" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.SteamWEBTest.getCardsInventory">
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.steamweb.Main" />
+      <module name="SteamWEB" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.steamweb.models.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="SteamWEBTest.getCardsInventory" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="SteamWEB" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.steamweb.*" />
+          <option name="PATTERN" value="org.steamweb.models.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -76,7 +110,7 @@
       <module name="SteamWEB" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.steamweb.*" />
+          <option name="PATTERN" value="org.steamweb.models.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -90,6 +124,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.SteamWEBTest.getCardsInventory" />
         <item itemvalue="JUnit.SteamWEBTest.getFarmableGames" />
       </list>
@@ -111,7 +146,28 @@
       <option name="project" value="LOCAL" />
       <updated>1664757937139</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="First Version">
+      <created>1664758231017</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1664758231017</updated>
+    </task>
+    <task id="LOCAL-00003" summary="First Version">
+      <created>1664758242150</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1664758242150</updated>
+    </task>
+    <task id="LOCAL-00004" summary="First Version">
+      <created>1664758327439</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1664758327439</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -128,6 +184,45 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First Version" />
     <option name="LAST_COMMIT_MESSAGE" value="First Version" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/org/steamweb/SteamWEB.java</url>
+          <line>157</line>
+          <properties class="org.steamweb.SteamWEB" method="logout">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/org/steamweb/SteamWEB.java</url>
+          <line>70</line>
+          <properties class="org.steamweb.SteamWEB" method="login">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/steamweb/SteamWEB.java</url>
+          <line>71</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/steamweb/SteamWEB.java</url>
+          <line>81</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/steamweb/SteamWEB.java</url>
+          <line>391</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/SteamWEB$SteamWEBTest_getCardsInventory.ic" NAME="SteamWEBTest.getCardsInventory Coverage Results" MODIFIED="1664757701755" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">

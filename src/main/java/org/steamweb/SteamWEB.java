@@ -1,36 +1,55 @@
 package org.steamweb;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import org.apache.http.*;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
+import org.apache.http.config.ConnectionConfig;
+import org.apache.http.entity.*;
+import org.apache.http.entity.mime.FormBodyPart;
+import org.apache.http.entity.mime.FormBodyPartBuilder;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.nio.ContentEncoder;
+import org.apache.http.protocol.HttpProcessorBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.steamweb.types.*;
-import java.io.File;
+import org.steamweb.exceptions.URLFetchException;
+import org.steamweb.models.*;
+
+import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SteamWEB implements ISteamWEB {
-    private Session session = new Session();
+    private Session session;
+
+    public SteamWEB(){
+        session = new Session();
+    }
 
     public void setSession(String session) {
         try {
@@ -61,12 +80,6 @@ public class SteamWEB implements ISteamWEB {
     //Login with Refresh Token(2 year expire)
     private void loginWithRefreshToken(String token) throws Exception {
         this.session.generateSessionId();
-
-        //Params for the post request
-        List<NameValuePair> jsonParams = new ArrayList<>(2);
-        jsonParams.add(new BasicNameValuePair("nonce", token));
-        jsonParams.add(new BasicNameValuePair("sessionid", this.session.getSessionid()));
-        jsonParams.add(new BasicNameValuePair("redir", "https://store.steampowered.com/login/?redir=&dir_ssl=1&snr=1_4_4__global-header"));
         //Start async client
         CloseableHttpAsyncClient httpclient = HttpAsyncClients.custom()
                 .setDefaultRequestConfig(RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build()).build();
@@ -76,7 +89,13 @@ public class SteamWEB implements ISteamWEB {
             HttpPost jsonRequest = new HttpPost("https://login.steampowered.com/jwt/finalizelogin");
 
             //We set parameters for the request
+            //Params for the post request
+            List<NameValuePair> jsonParams = new ArrayList<>(2);
+            jsonParams.add(new BasicNameValuePair("nonce", token));
+            jsonParams.add(new BasicNameValuePair("sessionid", this.session.getSessionid()));
+            jsonParams.add(new BasicNameValuePair("redir", "https://store.steampowered.com/login/?redir=&dir_ssl=1&snr=1_4_4__global-header"));
             jsonRequest.setEntity(new UrlEncodedFormEntity(jsonParams));
+
             //Getting response from server
             HttpResponse jsonResponse = httpclient.execute(jsonRequest, null).get();
             HttpEntity entity = jsonResponse.getEntity();
@@ -98,6 +117,7 @@ public class SteamWEB implements ISteamWEB {
             HttpResponse cookieResponse = httpclient.execute(cookieRequest, null).get();
             String cookie = cookieResponse.getFirstHeader("Set-Cookie").toString();
             this.session.setSteamCookie(StringUtils.substringBetween(cookie, "steamLoginSecure=", ";"));
+
             //Checking if we're logged in
             verifyLogin(authenticatedClient());
         } finally {
@@ -106,10 +126,12 @@ public class SteamWEB implements ISteamWEB {
 
     }
 
+
     //Login with Access Token(2 days expire) not implemented yet...
-    private void loginWithAcessToken(String token) {
+    private void loginWithAccessToken(String token) {
 
     }
+
 
     //Verifying Log In
     private void verifyLogin(CloseableHttpAsyncClient client) throws Exception {
@@ -132,11 +154,11 @@ public class SteamWEB implements ISteamWEB {
     }
 
 
+
     public void logout() {
         this.session.setSteamId(null);
         this.session.setSteamCookie(null);
         this.session.setSessionid(null);
-        this.session.setBrowserId(null);
         System.out.println("Log in information has been destroyed ==>" + this.session.toString());
     }
 
@@ -190,13 +212,18 @@ public class SteamWEB implements ISteamWEB {
                             StringUtils.substringBetween(
                                     element.toString(),"You can get "," more trading cards by playing"));
                 }
+                if(set[counter] == null) continue;
                 farmableGames.add(set[counter]);
                 counter++;
+            }
+            for (FarmableGame fG:farmableGames) {
+                System.out.println(fG);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
 
 
     private Elements farmableGamesBody() throws Exception {
@@ -215,6 +242,7 @@ public class SteamWEB implements ISteamWEB {
             client.close();
         }
     }
+
 
 
     public Item[] getCardsInventory(){
@@ -242,15 +270,18 @@ public class SteamWEB implements ISteamWEB {
                 classID.put(hash,amount);
             }
             List<Item> items = new ArrayList<>();
-
             //This one is for cards info
             JSONObject cards = body.getJSONObject("rgDescriptions");
             //Iterating for each card info
             for (Iterator i = cards.keySet().iterator(); i.hasNext ();){
+
                 String key = (String) i.next ();
                 JSONObject val = (JSONObject) cards.get(key);
                 if(val.get("type").toString().contains("Profile") ||
                         val.get("type").toString().contains("Emoticon")) continue;
+                if(!val.keySet().contains("owner_actions")) continue;
+                if(val.get("owner_actions") == null) continue;
+
                 Item card = new Item();
 
                 //Getting amount of cards from HashMap
@@ -267,19 +298,21 @@ public class SteamWEB implements ISteamWEB {
                 }else {
                     card.tradable = true;
                 }
-                if(!val.keySet().contains("owner_actions")) continue;
-                if(val.get("owner_actions") == null) continue;
                 String contextID = val.getJSONArray("owner_actions").toString();
                 card.contextId = StringUtils.substringBetween(contextID,""+card.assetid+", ",",");
                 if(card.contextId == null) continue;
                 items.add(card);
             }
             Item[] itemsArray = items.toArray(new Item[items.size()]);
+            for (Item iA: itemsArray){
+                System.out.println(iA);
+            }
             return itemsArray;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
 
     private JSONObject cardsJSON()throws Exception{
         CloseableHttpAsyncClient client = authenticatedClient();
@@ -297,26 +330,63 @@ public class SteamWEB implements ISteamWEB {
     }
 
 
-    public String changeAvatar(){
+    /** Due to getContentLength method has a limit of 25KB and whenever we use InputStreamBody it doesnt get the Content Length, we need to write the entity
+     * to a Byte Array Output Stream **/
+    public String changeAvatar(String url) throws Exception {
         CloseableHttpAsyncClient client = authenticatedClient();
         client.start();
         try {
-            File avatar = new File("C:\\Users\\Gonna\\Desktop\\test.png");
-            FileBody avatarBody = new FileBody(avatar, ContentType.DEFAULT_BINARY);
-            HttpPost req = new HttpPost("https://steamcommunity.com/actions/FileUploader/");
-            StringBody steamId = new StringBody(this.session.getSteamId(), ContentType.MULTIPART_FORM_DATA);
-            StringBody type = new StringBody("player_avatar_image", ContentType.MULTIPART_FORM_DATA);
-            MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
-            entityBuilder.addPart("avatar", avatarBody);
-            entityBuilder.addPart("sId",steamId);
-            entityBuilder.addPart("type",type);
-            HttpEntity entity = entityBuilder.build();
-            req.setEntity(entity);
-            return null;
-        }finally{
+            //Getting the Image as an ByteArrayInputStream
+            HttpGet avatarURL = new HttpGet(url);
+            HttpResponse avatarURLResponse = client.execute(avatarURL,null).get();
+            final ByteArrayOutputStream os1 = new ByteArrayOutputStream();
+            avatarURLResponse.getEntity().writeTo(os1);
+            final ByteArrayInputStream is1 = new ByteArrayInputStream(os1.toByteArray());
 
+            //Setting the form bodies for the request
+            InputStreamBody avatar = new InputStreamBody(is1,ContentType.IMAGE_PNG,"upload");
+            StringBody type = new StringBody("player_avatar_image",ContentType.MULTIPART_FORM_DATA);
+            StringBody sId = new StringBody(this.session.getSteamId(),ContentType.MULTIPART_FORM_DATA);
+            StringBody sessionid = new StringBody(this.session.getSessionid() ,ContentType.MULTIPART_FORM_DATA);
+            StringBody doSub = new StringBody("1",ContentType.MULTIPART_FORM_DATA);
+            StringBody json = new StringBody("1", ContentType.MULTIPART_FORM_DATA);
+
+
+            //Building the entity
+            HttpPost avatarUpload = new HttpPost("https://steamcommunity.com/actions/FileUploader/");
+            MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+            entityBuilder.addPart("avatar",avatar);
+            entityBuilder.addPart("type",type);
+            entityBuilder.addPart("sId",sId);
+            entityBuilder.addPart("sessionid",sessionid);
+            entityBuilder.addPart("doSub",doSub);
+            entityBuilder.addPart("json",json);
+            HttpEntity entity = entityBuilder.build();
+
+            //Writing the entity to the ByteArrayOutputStream
+            avatarUpload.setHeader("Content-Type",entity.getContentType().getValue());
+            final ByteArrayOutputStream entityOS = new ByteArrayOutputStream();
+            entity.writeTo(entityOS);
+            entityOS.flush();
+
+            //Here we set the entity with InputStream
+            final ByteArrayInputStream entityIS = new ByteArrayInputStream(entityOS.toByteArray());
+            InputStreamEntity streamEntity = new InputStreamEntity(entityIS);
+            avatarUpload.setEntity(streamEntity);
+
+
+            //Doing the request and getting a response
+            HttpResponse response = client.execute(avatarUpload,null).get();
+            String result = EntityUtils.toString(response.getEntity());
+            if(result.contains("Error")){
+                return "Error uploading new avatar";
+            }
+            return "Avatar uploaded";
+        }finally{
+            client.close();
         }
     }
+
 
     private String getProfileName()throws Exception{
         CloseableHttpAsyncClient client = authenticatedClient();
@@ -333,20 +403,57 @@ public class SteamWEB implements ISteamWEB {
     }
 
 
-    public void clearAliases() {
+    public void clearAliases() throws Exception {
+        CloseableHttpAsyncClient client = authenticatedClient();
+        try {
+            client.start();
+            HttpPost clearAlias = new HttpPost("https://steamcommunity.com/id/Gonnak/ajaxclearaliashistory/");
+            List<NameValuePair> params = new ArrayList<>(2);
+            params.add(new BasicNameValuePair("sessionid", this.session.getSessionid()));
+            clearAlias.setEntity(new UrlEncodedFormEntity(params));
+            HttpResponse response = client.execute(clearAlias, null).get();
+            if (response.getStatusLine().getStatusCode() == 200) {
+                System.out.println("Previous alias cleared");
+            }
+        } finally {
+            client.close();
+        }
+    }
+
+
+    public void changePrivacy(SetPrivacy privacy) throws Exception {
+        CloseableHttpAsyncClient client = authenticatedClient();
+        try{
+            client.start();
+            ProfilePrivacy profilePrivacy = new ProfilePrivacy(privacy);
+            HttpPost setPrivacy = new HttpPost("https://steamcommunity.com/id/Gonnak/ajaxsetprivacy/");
+            List<NameValuePair> params = new ArrayList<>(2);
+            params.add(new BasicNameValuePair("sessionid", this.session.getSessionid()));
+            params.add(new BasicNameValuePair("Privacy",profilePrivacy.toString()));
+            params.add(new BasicNameValuePair("eCommentPermission", "1"));
+            setPrivacy.setEntity(new UrlEncodedFormEntity(params));
+            HttpResponse response = client.execute(setPrivacy, null).get();
+            if (response.getStatusLine().getStatusCode() == 200){
+                System.out.println("Privacy changed succesfully");
+            }else {
+                System.out.println("Error changing privacy");
+            }
+        }finally {
+            client.close();
+        }
 
     }
 
 
-    public void changePrivacy() {
-
-    }
-
-    private CloseableHttpAsyncClient authenticatedClient() {
+    private CloseableHttpAsyncClient authenticatedClient(){
         BasicCookieStore Cookies = new BasicCookieStore();
+        BasicClientCookie sessionCookie = new BasicClientCookie("sessionid", this.session.getSessionid());
+        sessionCookie.setDomain("steamcommunity.com");
+        sessionCookie.setPath("/");
         BasicClientCookie steamCookie = new BasicClientCookie("steamLoginSecure", this.session.getSteamCookie());
         steamCookie.setDomain("steamcommunity.com");
         steamCookie.setPath("/");
+        Cookies.addCookie(sessionCookie);
         Cookies.addCookie(steamCookie);
         CloseableHttpAsyncClient client = HttpAsyncClients.custom()
                 .setDefaultRequestConfig(RequestConfig.custom().
@@ -354,6 +461,7 @@ public class SteamWEB implements ISteamWEB {
                 setDefaultCookieStore(Cookies).build();
         return client;
     }
+
 }
 
 

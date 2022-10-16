@@ -1,4 +1,4 @@
-package org.steamweb.types;
+package org.steamweb.models;
 import com.google.gson.Gson;
 import org.apache.commons.codec.binary.Hex;
 import java.security.SecureRandom;
@@ -7,15 +7,7 @@ public class Session {
     private String steamCookie;
     private String sessionid;
     private String steamId;
-    private String browserId;
 
-
-    public String getBrowserId() {
-        return this.browserId;
-    }
-    public void setBrowserId(String browserId) {
-        this.browserId = browserId;
-    }
     //Generates sessionId
     public void generateSessionId(){
         byte[] resBuf = new byte[12];

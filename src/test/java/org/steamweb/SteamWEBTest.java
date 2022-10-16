@@ -1,8 +1,6 @@
 package org.steamweb;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import org.steamweb.types.Item;
 
 class SteamWEBTest {
 
@@ -20,6 +18,7 @@ class SteamWEBTest {
 
     @Test
     void getCardsInventory() {
+
     }
 
     @Test

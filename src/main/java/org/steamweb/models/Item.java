@@ -1,4 +1,4 @@
-package org.steamweb.types;
+package org.steamweb.models;
 import com.google.gson.Gson;
 
 public class Item {
