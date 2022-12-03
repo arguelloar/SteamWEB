@@ -1,7 +1,7 @@
 # SteamWEB
 ## One of my first projects, getting data and steamlogin cookie from user token ##
 
-### What
+### What i learn ###
 
 - `JSON Manipulation`
 - `Asynchronous calls to the API from Steam`
