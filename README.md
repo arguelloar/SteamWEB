@@ -7,4 +7,4 @@
 - `Asynchronous calls to the API from Steam`
 - `HTTP Methods for the Calls aswell sending form data and cookies`
 - `Web Scraping for User steam cards inventory and games available to get cards from`
-- `Script to change Avatar via URL`
+- `Script to change Avatar from URL, and profile privacy`
